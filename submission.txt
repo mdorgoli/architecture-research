@@ -1,0 +1,6 @@
+Repository: https://github.com/mdorgoli/architecture-research
+Branch: docs/monolithic-microservices-fa
+Branch URL: https://github.com/mdorgoli/architecture-research/tree/docs/monolithic-microservices-fa
+DOCX: docs/monolithic-microservices-fa.docx
+
+این مخزن خصوصی است؛ برای مشاهدهٔ آن باید به حساب مالک وارد شوید یا دسترسی مخزن را داشته باشید.
