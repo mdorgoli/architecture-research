@@ -1,8 +1,9 @@
 Repository: https://github.com/mdorgoli/architecture-research
-Branch: feat/multilingual-api
-Branch URL: https://github.com/mdorgoli/architecture-research/tree/feat/multilingual-api
-Guide: https://github.com/mdorgoli/architecture-research/blob/feat/multilingual-api/docs/internationalization.md
+Branch: feat/docker-cicd
+Branch URL: https://github.com/mdorgoli/architecture-research/tree/feat/docker-cicd
+Workflow: https://github.com/mdorgoli/architecture-research/blob/feat/docker-cicd/.github/workflows/ci-cd.yml
+Report: https://github.com/mdorgoli/architecture-research/blob/feat/docker-cicd/docs/docker-cicd-report-fa.docx
 
-تمرین چندزبانی به پروژهٔ مدیریت هزینه و احراز هویت اضافه شده است.
-فارسی و انگلیسی، انتخاب زبان با lang و Accept-Language، فایل‌های PO/MO، Dependency Injection و پیام‌های ترجمه‌شدهٔ API.
-راهنمای اجرا در README.md و راهنمای افزودن زبان در docs/internationalization.md قرار دارد.
+تمرین Docker و CI/CD: Dockerfile چندمرحله‌ای، Compose، تست خودکار، ساخت و اجرای آزمایشی کانتینر و تحویل image به GHCR.
+گزارش فارسی مقایسه در docs و راهنمای اجرا در docs/container-delivery.md قرار دارد.
+مقصد سرور تعیین نشده است؛ انتشار image با استقرار روی سرور عمومی متفاوت است.

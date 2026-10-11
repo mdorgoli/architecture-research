@@ -92,3 +92,13 @@ $env:SSL_CERT_FILE = Join-Path (mkcert -CAROOT) "rootCA.pem"
 [راهنمای انتخاب زبان، فایل‌ها، افزودن زبان و چالش‌ها](docs/internationalization.md)
 
 برای تغییر ترجمه‌ها، requirements-i18n.txt را نصب و scripts/compile_translations.py را اجرا کنید. فایل‌های MO آماده در مخزن هستند. این شاخه `feat/multilingual-api` است و نسخهٔ قبلی احراز هویت در `feat/jwt-auth` محفوظ است.
+
+## Docker و CI/CD
+
+Dockerfile چندمرحله‌ای، .dockerignore، compose.yaml و workflow در `.github/workflows/ci-cd.yml` اضافه شده‌اند. مراحل خودکار: تست‌ها ← ساخت و smoke test کانتینر ← انتشار همان image در GHCR.
+
+- [راهنمای ساخت، اجرا، migration و تحویل image](docs/container-delivery.md)
+- [گزارش فارسی Word: تک‌مرحله‌ای و چندمرحله‌ای](docs/docker-cicd-report-fa.docx)
+- [نسخهٔ متنی گزارش](docs/docker-cicd-report-fa.md)
+
+شاخهٔ این تمرین `feat/docker-cicd` است. workflow استقرار روی سرور عمومی ندارد، زیرا مقصد استقرار تعیین نشده است.

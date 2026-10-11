@@ -75,6 +75,12 @@ DB = Annotated[Session, Depends(get_db)]
 Language = Annotated[Translator, Depends(get_translator)]
 
 
+@app.get("/health", include_in_schema=False)
+def health(db: DB):
+    db.execute(select(Expense.id).limit(0))
+    return {"status": "ok"}
+
+
 @app.get("/welcome")
 def welcome(translator: Language):
     return {"language": translator.language, "message": translator.gettext("Welcome to the expense manager.")}

@@ -1,0 +1,24 @@
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+    image: expense-api:local
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?Set a random JWT_SECRET before starting}
+      APP_ORIGIN: ${APP_ORIGIN:-https://localhost:8443}
+      DATABASE_URL: sqlite:////data/expenses.db
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - expense-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+volumes:
+  expense-data:
