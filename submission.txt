@@ -1,8 +1,7 @@
 Repository: https://github.com/mdorgoli/architecture-research
-Branch: docs/monolithic-microservices-fa
-Branch URL: https://github.com/mdorgoli/architecture-research/tree/docs/monolithic-microservices-fa
-DOCX: docs/monolithic-microservices-fa.docx
+Branch: feat/expense-database
+Branch URL: https://github.com/mdorgoli/architecture-research/tree/feat/expense-database
+Diagram: https://github.com/mdorgoli/architecture-research/blob/feat/expense-database/docs/expense-database.drawio
 
-DOCX URL: https://github.com/mdorgoli/architecture-research/blob/docs/monolithic-microservices-fa/docs/monolithic-microservices-fa.docx
-
-مخزن عمومی است و تحقیق از لینک شاخه یا لینک مستقیم فایل، بدون ورود به حساب GitHub قابل مشاهده و دریافت است.
+تمرین طراحی دیتابیس مدیریت هزینه‌ها: FastAPI + SQLAlchemy + SQLite + Alembic
+نمودار drawio و شرح schema در docs قرار دارند. راهنمای نصب، migration و اجرا در README.md است.

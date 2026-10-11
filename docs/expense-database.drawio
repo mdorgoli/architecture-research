@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram id="expense-schema" name="Database and Connections">
+    <mxGraphModel dx="1200" dy="800" grid="1" page="1" pageWidth="1169" pageHeight="827">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Expense Manager — SQLite schema and connection flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="20" width="1050" height="55" />
+        </mxCell>
+        <mxCell id="api" value="FastAPI&lt;br/&gt;Pydantic input / output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="110" width="220" height="80" />
+        </mxCell>
+        <mxCell id="session" value="SQLAlchemy Session&lt;br/&gt;One per request" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="370" y="110" width="220" height="80" />
+        </mxCell>
+        <mxCell id="engine" value="Engine&lt;br/&gt;DATABASE_URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="690" y="110" width="220" height="80" />
+        </mxCell>
+        <mxCell id="expense" value="&lt;b&gt;expenses&lt;/b&gt;&lt;hr/&gt;PK id : INTEGER AUTOINCREMENT&lt;br/&gt;description : TEXT NOT NULL&lt;br/&gt;amount : FLOAT NOT NULL&lt;hr/&gt;CHECK length(trim(description)) &amp;gt; 0&lt;br/&gt;CHECK 0 &amp;lt; amount &amp;lt;= max finite float" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="540" y="320" width="410" height="205" />
+        </mxCell>
+        <mxCell id="orm" value="models.Expense&lt;br/&gt;Base.metadata" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="70" y="340" width="260" height="90" />
+        </mxCell>
+        <mxCell id="alembic" value="Alembic&lt;br/&gt;0001_create_expenses&lt;br/&gt;upgrade / downgrade" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="70" y="555" width="260" height="100" />
+        </mxCell>
+        <mxCell id="version" value="alembic_version&lt;br/&gt;PK version_num : VARCHAR(32)&lt;br/&gt;Managed by Alembic; no FK" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="540" y="600" width="410" height="100" />
+        </mxCell>
+        <mxCell id="a" value="Depends(get_db)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=13;" edge="1" parent="1" source="api" target="session">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="b" value="SQL / transaction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=13;" edge="1" parent="1" source="session" target="engine">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="c" value="SQLite: expenses.db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=13;" edge="1" parent="1" source="engine" target="expense">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d" value="ORM mapping" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=13;" edge="1" parent="1" source="orm" target="expense">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e" value="target_metadata" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=13;" edge="1" parent="1" source="alembic" target="orm">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="f" value="revision tracking" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=13;" edge="1" parent="1" source="alembic" target="version">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="note" value="Single expense table: no user/category relation required by the assignment. SQLite also manages sqlite_sequence internally." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=16;spacing=12;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="50" y="730" width="1000" height="50" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
