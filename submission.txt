@@ -3,4 +3,6 @@ Branch: docs/monolithic-microservices-fa
 Branch URL: https://github.com/mdorgoli/architecture-research/tree/docs/monolithic-microservices-fa
 DOCX: docs/monolithic-microservices-fa.docx
 
-این مخزن خصوصی است؛ برای مشاهدهٔ آن باید به حساب مالک وارد شوید یا دسترسی مخزن را داشته باشید.
+DOCX URL: https://github.com/mdorgoli/architecture-research/blob/docs/monolithic-microservices-fa/docs/monolithic-microservices-fa.docx
+
+مخزن عمومی است و تحقیق از لینک شاخه یا لینک مستقیم فایل، بدون ورود به حساب GitHub قابل مشاهده و دریافت است.
