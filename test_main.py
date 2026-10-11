@@ -53,7 +53,8 @@ class ExpenseAPITests(ExpenseFixture):
                 kwargs = {"json": {"description": "Missing", "amount": 1.5}} if method == "put" else {}
                 response = getattr(self.client, method)("/expenses/999999", **kwargs)
                 self.assertEqual(response.status_code, 404)
-                self.assertEqual(response.json(), {"detail": "Expense not found"})
+                self.assertEqual(response.json()["detail"], "Expense not found")
+                self.assertEqual(response.json()["message"], "Expense not found.")
         self.assertEqual(self.client.get("/expenses").json(), [])
 
     def test_invalid_input_and_failed_update_leave_data_unchanged(self):

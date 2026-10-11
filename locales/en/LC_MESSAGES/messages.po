@@ -1,0 +1,98 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: expense-api 1.0\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Welcome to the expense manager."
+msgstr "Welcome to the expense manager."
+
+msgid "This API manages your personal expenses."
+msgstr "This API manages your personal expenses."
+
+msgid "You have logged in successfully."
+msgstr "You have logged in successfully."
+
+msgid "Your session has been renewed."
+msgstr "Your session has been renewed."
+
+msgid "Please log in to continue."
+msgstr "Please log in to continue."
+
+msgid "The username or password is incorrect."
+msgstr "The username or password is incorrect."
+
+msgid "The token has expired."
+msgstr "The token has expired."
+
+msgid "The token is invalid."
+msgstr "The token is invalid."
+
+msgid "The session is no longer valid. Please log in again."
+msgstr "The session is no longer valid. Please log in again."
+
+msgid "A refresh token was reused. Please log in again."
+msgstr "A refresh token was reused. Please log in again."
+
+msgid "The request security check failed."
+msgstr "The request security check failed."
+
+msgid "Expense not found."
+msgstr "Expense not found."
+
+msgid "The requested route was not found."
+msgstr "The requested route was not found."
+
+msgid "This HTTP method is not allowed."
+msgstr "This HTTP method is not allowed."
+
+msgid "The request could not be completed."
+msgstr "The request could not be completed."
+
+msgid "Some input fields are invalid."
+msgstr "Some input fields are invalid."
+
+msgid "This field is required."
+msgstr "This field is required."
+
+msgid "Enter a text value."
+msgstr "Enter a text value."
+
+msgid "The text is too short."
+msgstr "The text is too short."
+
+msgid "The text is too long."
+msgstr "The text is too long."
+
+msgid "The text format is invalid."
+msgstr "The text format is invalid."
+
+msgid "Enter a numeric value."
+msgstr "Enter a numeric value."
+
+msgid "Enter a finite number."
+msgstr "Enter a finite number."
+
+msgid "The number must be greater than the allowed minimum."
+msgstr "The number must be greater than the allowed minimum."
+
+msgid "Enter an integer."
+msgstr "Enter an integer."
+
+msgid "Extra fields are not allowed."
+msgstr "Extra fields are not allowed."
+
+msgid "The JSON body is invalid."
+msgstr "The JSON body is invalid."
+
+msgid "The value is invalid."
+msgstr "The value is invalid."
+
+msgid "You have %(count)d expense."
+msgid_plural "You have %(count)d expenses."
+msgstr[0] "You have %(count)d expense."
+msgstr[1] "You have %(count)d expenses."

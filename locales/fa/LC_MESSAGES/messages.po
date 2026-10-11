@@ -1,0 +1,98 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: expense-api 1.0\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Welcome to the expense manager."
+msgstr "به سامانهٔ مدیریت هزینه‌ها خوش آمدید."
+
+msgid "This API manages your personal expenses."
+msgstr "این API هزینه‌های شخصی شما را مدیریت می‌کند."
+
+msgid "You have logged in successfully."
+msgstr "با موفقیت وارد شدید."
+
+msgid "Your session has been renewed."
+msgstr "نشست شما تمدید شد."
+
+msgid "Please log in to continue."
+msgstr "برای ادامه وارد حساب خود شوید."
+
+msgid "The username or password is incorrect."
+msgstr "نام کاربری یا رمز عبور نادرست است."
+
+msgid "The token has expired."
+msgstr "اعتبار توکن به پایان رسیده است."
+
+msgid "The token is invalid."
+msgstr "توکن نامعتبر است."
+
+msgid "The session is no longer valid. Please log in again."
+msgstr "نشست معتبر نیست. دوباره وارد شوید."
+
+msgid "A refresh token was reused. Please log in again."
+msgstr "توکن تمدید دوباره استفاده شده است. دوباره وارد شوید."
+
+msgid "The request security check failed."
+msgstr "بررسی امنیتی درخواست ناموفق بود."
+
+msgid "Expense not found."
+msgstr "هزینه پیدا نشد."
+
+msgid "The requested route was not found."
+msgstr "مسیر درخواستی پیدا نشد."
+
+msgid "This HTTP method is not allowed."
+msgstr "این متد HTTP مجاز نیست."
+
+msgid "The request could not be completed."
+msgstr "درخواست انجام نشد."
+
+msgid "Some input fields are invalid."
+msgstr "برخی از فیلدهای ورودی نامعتبرند."
+
+msgid "This field is required."
+msgstr "این فیلد الزامی است."
+
+msgid "Enter a text value."
+msgstr "یک مقدار متنی وارد کنید."
+
+msgid "The text is too short."
+msgstr "متن بیش از حد کوتاه است."
+
+msgid "The text is too long."
+msgstr "متن بیش از حد طولانی است."
+
+msgid "The text format is invalid."
+msgstr "قالب متن نامعتبر است."
+
+msgid "Enter a numeric value."
+msgstr "یک مقدار عددی وارد کنید."
+
+msgid "Enter a finite number."
+msgstr "یک عدد متناهی وارد کنید."
+
+msgid "The number must be greater than the allowed minimum."
+msgstr "عدد باید بزرگ‌تر از حداقل مجاز باشد."
+
+msgid "Enter an integer."
+msgstr "یک عدد صحیح وارد کنید."
+
+msgid "Extra fields are not allowed."
+msgstr "فیلد اضافی مجاز نیست."
+
+msgid "The JSON body is invalid."
+msgstr "بدنهٔ JSON نامعتبر است."
+
+msgid "The value is invalid."
+msgstr "مقدار نامعتبر است."
+
+msgid "You have %(count)d expense."
+msgid_plural "You have %(count)d expenses."
+msgstr[0] "شما %(count)d هزینه دارید."
+msgstr[1] "شما %(count)d هزینه دارید."

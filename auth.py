@@ -14,6 +14,7 @@ from security import (
     issue_token, password_hash, set_cookie, set_session_cookies,
 )
 from settings import get_settings
+from i18n import Translator, get_translator
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -38,7 +39,7 @@ def csrf(request: Request, response: Response):
 
 
 @router.post("/login")
-def login(data: LoginInput, request: Request, response: Response, db: Session = Depends(get_db)):
+def login(data: LoginInput, request: Request, response: Response, db: Session = Depends(get_db), translator: Translator = Depends(get_translator)):
     user = db.scalar(select(User).where(User.username == data.username))
     valid = password_hash.verify(data.password, user.password_hash if user else DUMMY_HASH)
     if user is None or not valid:
@@ -60,11 +61,11 @@ def login(data: LoginInput, request: Request, response: Response, db: Session = 
                        csrf_hash=digest(csrf_token), expires_at=expires, revoked=False))
     db.commit()
     set_session_cookies(response, access, refresh, csrf_token, expires)
-    return {"message": "logged_in", "csrf_token": csrf_token}
+    return {"code": "logged_in", "message": translator.gettext("You have logged in successfully."), "csrf_token": csrf_token}
 
 
 @router.post("/refresh")
-def refresh(request: Request, response: Response, db: Session = Depends(get_db)):
+def refresh(request: Request, response: Response, db: Session = Depends(get_db), translator: Translator = Depends(get_translator)):
     token = request.cookies.get(REFRESH_COOKIE)
     try:
         claims = decode_token(token, "refresh")
@@ -91,11 +92,11 @@ def refresh(request: Request, response: Response, db: Session = Depends(get_db))
     db.commit()
     access = issue_token("access", str(uid), sid, min(now + get_settings().access_seconds, expires))
     set_session_cookies(response, access, new_refresh, request.cookies[CSRF_COOKIE], expires)
-    return {"message": "session_renewed"}
+    return {"code": "session_renewed", "message": translator.gettext("Your session has been renewed.")}
 
 
 @router.post("/logout", status_code=204)
-def logout(request: Request, db: Session = Depends(get_db)):
+def logout(request: Request, db: Session = Depends(get_db), translator: Translator = Depends(get_translator)):
     # Accept an expired but correctly signed token solely to revoke its session.
     for cookie, kind in ((REFRESH_COOKIE, "refresh"), (ACCESS_COOKIE, "access")):
         try:
