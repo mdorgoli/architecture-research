@@ -1,7 +1,7 @@
 Repository: https://github.com/mdorgoli/architecture-research
-Branch: feat/expense-database
-Branch URL: https://github.com/mdorgoli/architecture-research/tree/feat/expense-database
-Diagram: https://github.com/mdorgoli/architecture-research/blob/feat/expense-database/docs/expense-database.drawio
+Branch: feat/jwt-auth
+Branch URL: https://github.com/mdorgoli/architecture-research/tree/feat/jwt-auth
+Security guide: https://github.com/mdorgoli/architecture-research/blob/feat/jwt-auth/docs/authentication.md
 
-تمرین طراحی دیتابیس مدیریت هزینه‌ها: FastAPI + SQLAlchemy + SQLite + Alembic
-نمودار drawio و شرح schema در docs قرار دارند. راهنمای نصب، migration و اجرا در README.md است.
+تمرین احراز هویت JWT به مدیریت هزینه‌ها افزوده شده است: ورود، خروج، تمدید نشست، کوکی Secure و HttpOnly، محافظت CSRF، چرخش Refresh Token و جداسازی هزینه‌های کاربران.
+راهنمای نصب و HTTPS در README.md و نمودار و توضیحات امنیتی در docs قرار دارند.

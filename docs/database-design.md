@@ -1,36 +1,18 @@
-# طراحی دیتابیس مدیریت هزینه‌ها
+# Schema نسخهٔ احراز هویت
 
-فایل قابل ویرایش در diagrams.net / draw.io: `expense-database.drawio`.
+نمودار فعلی: [auth-schema.drawio](auth-schema.drawio). نمودار expense-database.drawio مربوط به نسخهٔ قبلی 0001 نگه داشته شده است.
 
-## محدوده و فرض‌ها
+| جدول | ستون‌ها و قیدها |
+|---|---|
+| users | id کلید اصلی؛ username رشتهٔ ۶۴ کاراکتری یکتا؛ password_hash متن Argon2؛ هر دو NOT NULL |
+| auth_sessions | id رشتهٔ ۶۴ کاراکتری کلید اصلی؛ user_id کلید خارجی users؛ refresh_hash و csrf_hash رشتهٔ ۶۴ کاراکتری؛ expires_at زمان Unix؛ revoked بولی؛ همه NOT NULL |
+| expenses | id عددی AUTOINCREMENT؛ description متن غیرخالی؛ amount مثبت و متناهی؛ owner_id کلید خارجی users و دارای index؛ nullable برای حفظ هزینه‌های قدیمی |
+| alembic_version | نسخهٔ schema؛ مستقل از داده‌های کسب‌وکار |
 
-این تمرین تک‌کاربره است و همان سه فیلد تمرین قبل را نگه می‌دارد. جدول کاربر، دسته‌بندی و رابطهٔ خارجی اضافه نشده، چون در نیازمندی وجود ندارند. یک جدول مستقل برای این محدوده کافی است.
+هر کاربر چند هزینه و چند نشست دارد. شناسهٔ نشست تصادفی است و شناسهٔ کاربر از JWT معتبر و نشست فعال استخراج می‌شود. کلیدهای خارجی SQLite با PRAGMA foreign_keys=ON فعال‌اند.
 
-| ستون | نوع SQLAlchemy / SQLite | قید |
-|---|---|---|
-| id | Integer / INTEGER | کلید اصلی؛ AUTOINCREMENT |
-| description | Text / TEXT | NOT NULL؛ پس از trim غیرخالی |
-| amount | Float / FLOAT | NOT NULL؛ مثبت و متناهی |
+Engine و Session در database.py تعریف می‌شوند؛ هر درخواست Session جدا دارد. نوشتن‌ها commit می‌شوند و Session پس از درخواست بسته می‌شود. مدل‌ها در models.py و قرارداد ورودی/خروجی هزینه در schemas.py هستند. نوع float طبق تمرین قبلی حفظ شده است و برای حسابداری دقیق نیازمند تصمیم جداگانه دربارهٔ پول و دقت است.
 
-SQLite جدول داخلی `sqlite_sequence` را برای شمارنده می‌سازد. Alembic نیز جدول `alembic_version` را برای نسخهٔ schema مدیریت می‌کند؛ این جدول با expenses رابطهٔ خارجی ندارد.
+0001 جدول هزینه را می‌سازد؛ 0002 جدول کاربران، نشست‌ها و owner_id را اضافه می‌کند. API از create_all استفاده نمی‌کند. هزینه‌های موجود حفظ می‌شوند و بدون مالک می‌مانند؛ API آن‌ها را به کسی نشان نمی‌دهد. downgrade 0001 کاربران، نشست‌ها و مالکیت را حذف می‌کند؛ فقط روی نسخهٔ آزمایشی یا پس از پشتیبان‌گیری و تصمیم آگاهانه اجرا شود.
 
-## اتصال و چرخهٔ درخواست
-
-FastAPI ← اعتبارسنجی Pydantic → Session مختص درخواست → مدل Expense → Engine → فایل SQLite.
-در ایجاد، ویرایش و حذف، تغییرات commit می‌شوند. Session در پایان درخواست بسته می‌شود؛ تراکنش commitنشده هنگام بسته‌شدن برگشت می‌خورد. شناسهٔ حذف‌شده در SQLite دوباره تخصیص نمی‌یابد.
-
-`database.py` آدرس را از متغیر محیطی `DATABASE_URL` می‌خواند. مقدار پیش‌فرض فایل `expenses.db` کنار کد پروژه است؛ API و Alembic از یک تنظیم مشترک استفاده می‌کنند. فایل دیتابیس و اطلاعات محیطی وارد Git نمی‌شوند.
-
-## Schema و migration
-
-`models.py` ساختار ORM، `schemas.py` قرارداد ورودی/خروجی و migration شمارهٔ `0001` ایجاد جدول را تعریف می‌کنند. جدول‌ها فقط با Alembic ساخته می‌شوند؛ هنگام اجرای API از `create_all` استفاده نمی‌شود. دستور downgrade جدول و داده‌های آن را حذف می‌کند و فقط باید روی دیتابیس آزمایشی اجرا شود.
-
-اعتبارسنجی API از قید SQL دقیق‌تر است: فاصله‌های ابتدا و انتهای توضیح حذف می‌شوند، رشتهٔ خالی یا بولی به‌جای عدد رد می‌شود. SQLite نوع‌دهی انعطاف‌پذیر دارد؛ نوشتن مستقیم SQL جایگزین اعتبارسنجی API نیست.
-
-نوع float برای حفظ قرارداد تمرین قبلی باقی مانده است. این پروژه ثبت آموزشی هزینه‌هاست و محاسبه یا انتقال پول انجام نمی‌دهد؛ طراحی حسابداری واقعی نیاز به سیاست واحد پول و دقت اعشاری مشخص دارد.
-
-## منابع
-
-- https://docs.sqlalchemy.org/en/21/orm/session_basics.html
-- https://alembic.sqlalchemy.org/en/latest/tutorial.html
-- https://alembic.sqlalchemy.org/en/latest/autogenerate.html
+منابع: [SQLAlchemy Session](https://docs.sqlalchemy.org/en/21/orm/session_basics.html)، [Alembic](https://alembic.sqlalchemy.org/en/latest/tutorial.html).

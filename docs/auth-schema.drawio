@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram id="auth-schema" name="JWT auth schema">
+    <mxGraphModel page="1" pageWidth="1169" pageHeight="827">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="users" value="&lt;b&gt;users&lt;/b&gt;&lt;hr/&gt;PK id INTEGER&lt;br/&gt;username VARCHAR(64) UNIQUE NOT NULL&lt;br/&gt;password_hash TEXT NOT NULL" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;fontSize=15;spacing=12;">
+          <mxGeometry as="geometry" x="390" y="80" width="350" height="145" />
+        </mxCell>
+        <mxCell id="expenses" value="&lt;b&gt;expenses&lt;/b&gt;&lt;hr/&gt;PK id INTEGER AUTOINCREMENT&lt;br/&gt;FK owner_id → users.id (nullable legacy)&lt;br/&gt;description TEXT NOT NULL&lt;br/&gt;amount FLOAT NOT NULL&lt;br/&gt;CHECK nonempty description, positive finite amount" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;fontSize=15;spacing=12;">
+          <mxGeometry as="geometry" x="40" y="330" width="420" height="205" />
+        </mxCell>
+        <mxCell id="sessions" value="&lt;b&gt;auth_sessions&lt;/b&gt;&lt;hr/&gt;PK id VARCHAR(64)&lt;br/&gt;FK user_id → users.id NOT NULL&lt;br/&gt;refresh_hash VARCHAR(64) NOT NULL&lt;br/&gt;csrf_hash VARCHAR(64) NOT NULL&lt;br/&gt;expires_at INTEGER NOT NULL&lt;br/&gt;revoked BOOLEAN NOT NULL" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;fontSize=15;spacing=12;">
+          <mxGeometry as="geometry" x="660" y="330" width="420" height="205" />
+        </mxCell>
+        <mxCell id="owns" source="users" target="expenses" value="1 → many expenses" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;fontSize=14;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="sessions_fk" source="users" target="sessions" value="1 → many sessions" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;fontSize=14;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="flow" value="Browser → HTTPS + Secure cookies + CSRF → FastAPI → JWT validation + active session → owner-filtered SQLAlchemy query → SQLite" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;fontSize=15;spacing=12;">
+          <mxGeometry as="geometry" x="80" y="620" width="960" height="80" />
+        </mxCell>
+        <mxCell id="note" value="Access: 15 minutes | Refresh: 7-day absolute limit | Rotation + replay revocation | Alembic revision: 0002" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;fontSize=15;spacing=12;">
+          <mxGeometry as="geometry" x="80" y="735" width="960" height="45" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,54 +1,13 @@
 import unittest
-
-from fastapi.testclient import TestClient
-
-import tempfile
-from pathlib import Path
-from unittest.mock import patch
-
 from alembic import command
-from alembic.config import Config
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
-
-import database
-from database import get_db
-from main import app
-from schemas import ExpenseOutput
 from pydantic import ValidationError
+from schemas import ExpenseOutput
+from test_support import ExpenseFixture
 
 
-class ExpenseAPITests(unittest.TestCase):
-    def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
-        self.addCleanup(self.temp.cleanup)
-        self.url = "sqlite:///" + (Path(self.temp.name) / "test.db").as_posix()
-        self.engine = create_engine(self.url, connect_args={"check_same_thread": False})
-        self.addCleanup(self.engine.dispose)
-        self.factory = sessionmaker(bind=self.engine)
-        self.config = Config(str(Path(__file__).parent / "alembic.ini"))
-        self.engine_patch = patch.object(database, "engine", self.engine)
-        self.engine_patch.start()
-        self.addCleanup(self.engine_patch.stop)
-        command.upgrade(self.config, "head")
-
-        def override_db():
-            with self.factory() as session:
-                yield session
-
-        app.dependency_overrides[get_db] = override_db
-        self.addCleanup(app.dependency_overrides.clear)
-        self.client = TestClient(app)
-        self.addCleanup(self.client.close)
-
-    def create(self, description="Lunch", amount=12.5):
-        response = self.client.post(
-            "/expenses", json={"description": description, "amount": amount}
-        )
-        self.assertEqual(response.status_code, 201)
-        return response.json()
-
+class ExpenseAPITests(ExpenseFixture):
     def test_empty_list(self):
         response = self.client.get("/expenses")
         self.assertEqual(response.status_code, 200)
@@ -167,7 +126,8 @@ class ExpenseAPITests(unittest.TestCase):
         command.upgrade(self.config, "head")
         command.check(self.config)
         with self.engine.connect() as connection:
-            self.assertEqual(connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one(), "0001")
+            self.assertEqual(connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one(), "0002")
+        self.seed_and_login()
         self.create()
 
 

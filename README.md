@@ -1,80 +1,84 @@
-# مدیریت هزینه‌ها با FastAPI، SQLAlchemy و Alembic
+# مدیریت هزینه‌ها با احراز هویت JWT
 
-نسخهٔ دیتابیسی تمرین هزینه‌ها با SQLite، مدل ورودی/خروجی Pydantic و نمودار drawio در پوشهٔ docs.
+FastAPI + Pydantic + SQLAlchemy + SQLite + Alembic. نسخهٔ این شاخه ورود، خروج، تمدید نشست و مالکیت هزینه‌ها را به تمرین قبلی اضافه می‌کند.
 
-## نصب و اجرا در Windows
+## راه‌اندازی
 
-Python 3.10 یا جدیدتر لازم است. از ریشهٔ پروژه اجرا کنید:
+Python 3.10+ لازم است. در ریشهٔ پروژه و PowerShell:
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
+$env:JWT_SECRET = (& .venv\Scripts\python -c "import secrets; print(secrets.token_hex(32))")
+$env:APP_ORIGIN = "https://localhost:8443"
 .venv\Scripts\python -m alembic upgrade head
-.venv\Scripts\python -m uvicorn main:app --reload
+.venv\Scripts\python create_user.py student
 ```
 
-مستندات تعاملی: http://127.0.0.1:8000/docs
+رمز کاربر به‌صورت مخفی پرسیده می‌شود؛ حداقل ۱۲ و حداکثر ۱۲۸ کاراکتر. کاربر یا رمز پیش‌فرض وجود ندارد. نام کاربری ۳ تا ۶۴ کاراکتر از حروف و اعداد لاتین و `_.-` است. ثبت‌نام عمومی در محدودهٔ تمرین نیست.
 
-دیتابیس پیش‌فرض `expenses.db` کنار کد است. داده‌ها با restart باقی می‌مانند. برای فایل دیگر، پیش از اجرای Alembic و API در همان ترمینال تنظیم کنید:
+کلید JWT را یک بار تصادفی بسازید و برای اجراهای بعدی در محیط امن نگه دارید؛ دستور بالا در هر اجرا کلید تازه می‌سازد و توکن‌های قبلی را نامعتبر می‌کند. برنامه بدون کلید حداقل ۳۲ بایتی شروع نمی‌شود. کلید یا رمز را داخل Git نگذارید. فایل `.env` خودکار بارگذاری نمی‌شود.
+
+## HTTPS محلی
+
+کوکی‌ها همیشه Secure هستند؛ آن‌ها را برای اجرای HTTP ضعیف نکنید. پس از نصب [mkcert](https://github.com/FiloSottile/mkcert)، برای توسعهٔ محلی:
 
 ```powershell
-$env:DATABASE_URL = "sqlite:///./my-expenses.db"
+mkcert -install
+mkcert -key-file localhost-key.pem -cert-file localhost.pem localhost 127.0.0.1 ::1
+.venv\Scripts\python -m uvicorn main:app --host 127.0.0.1 --port 8443 --ssl-keyfile localhost-key.pem --ssl-certfile localhost.pem
 ```
 
-این تنظیم برای این تمرین با SQLite آزمایش شده است.
+`mkcert -install` مرجع گواهی توسعه را به سیستم مورد اعتماد اضافه می‌کند؛ کلید خصوصی آن را به اشتراک نگذارید. این تنظیم برای توسعه است. در استقرار واقعی HTTPS و تنظیم پروکسی مورد اعتماد لازم است.
 
-## API
+مستندات API: https://localhost:8443/docs
 
-| متد | مسیر | پاسخ موفق |
+دیتابیس پیش‌فرض فایل `expenses.db` کنار کد است. برای مسیر دیگر، پیش از اجرای Alembic و API متغیر `DATABASE_URL` را تنظیم کنید؛ مثال: `sqlite:///./my-expenses.db`.
+
+## مسیرها
+
+| متد | مسیر | نتیجه |
 |---|---|---|
-| POST | /expenses | 201 |
-| GET | /expenses | 200 |
-| GET | /expenses/{expense_id} | 200 |
-| PUT | /expenses/{expense_id} | 200 |
-| DELETE | /expenses/{expense_id} | 204 بدون بدنه |
+| GET | /auth/csrf | دریافت توکن CSRF پیش از ورود؛ 200 |
+| POST | /auth/login | اعتبارسنجی رمز و تنظیم کوکی‌ها؛ 200 |
+| POST | /auth/refresh | تعویض توکن‌ها بدون رمز؛ 200 |
+| POST | /auth/logout | ابطال نشست و پاک‌کردن کوکی‌ها؛ 204 |
+| GET | /auth/me | شناسه و نام کاربر جاری؛ 200 |
+| POST | /expenses | ایجاد هزینه برای کاربر جاری؛ 201 |
+| GET | /expenses | فقط هزینه‌های کاربر جاری؛ 200 |
+| GET / PUT / DELETE | /expenses/{expense_id} | خواندن / ویرایش / حذف؛ 200 / 200 / 204 |
 
-بدنهٔ POST و PUT:
+بدنهٔ ورود `{"username":"student","password":"رمز انتخابی شما"}` است. بدنهٔ ایجاد/ویرایش هزینه مانند قبل `{"description":"خرید کتاب","amount":150000.5}` است. هزینهٔ ناموجود یا متعلق به دیگری 404، ورودی نامعتبر 422، مشکل احراز هویت 401 و شکست CSRF برابر 403 است.
 
-```json
-{"description": "خرید کتاب", "amount": 150000.5}
-```
+هر درخواست تغییردهنده، حتی ورود، به Origin برابر APP_ORIGIN و هدر `X-CSRF-Token` برابر کوکی `__Host-csrf` نیاز دارد. مرورگر Origin را خودش می‌فرستد. پس از ورود، مقدار CSRF جدید را از پاسخ ورود یا کوکی بخوانید. Swagger به‌تنهایی هدر CSRF را اضافه نمی‌کند؛ برای آزمایش کامل از نمونه‌کلاینت زیر یا کلاینتی با cookie jar استفاده کنید.
 
-شناسه را سرور می‌سازد. توضیح غیرخالی و مبلغ مثبت و متناهی الزامی است؛ رشتهٔ عددی، بولی و فیلد اضافی رد می‌شوند. هزینهٔ ناموجود پاسخ 404 و ورودی نامعتبر پاسخ 422 دارد. پاسخ‌های دارای بدنه با `ExpenseOutput` بررسی می‌شوند.
-
-## فایل‌ها و طراحی
-
-- `database.py`: Engine، Base و Session مختص هر درخواست.
-- `models.py`: مدل ORM و قیدهای جدول expenses.
-- `schemas.py`: مدل‌های Pydantic ورودی و خروجی.
-- `alembic.ini` و `alembic/`: تنظیمات، قالب و migration اولیه.
-- [نمودار قابل ویرایش drawio](docs/expense-database.drawio): با Open Existing Diagram در diagrams.net باز کنید.
-- [شرح طراحی](docs/database-design.md): جدول‌ها، نوع فیلدها، اتصال و محدودیت‌ها.
-
-## مدیریت migration
-
-```powershell
-.venv\Scripts\python -m alembic current
-.venv\Scripts\python -m alembic check
-# پس از تغییر مدل، migration پیشنهادی را بسازید و کد آن را بازبینی کنید:
-.venv\Scripts\python -m alembic revision --autogenerate -m "describe change"
-.venv\Scripts\python -m alembic upgrade head
-```
-
-بازگشت به base جدول هزینه‌ها و داده‌های آن را حذف می‌کند؛ فقط برای دیتابیس آزمایشی:
-
-```powershell
-.venv\Scripts\python -m alembic downgrade base
-```
-
-## تست
+## نمونهٔ قابل اجرا و تمدید خودکار
 
 ```powershell
 .venv\Scripts\python -m pip install -r requirements-test.txt
-.venv\Scripts\python -m unittest -v
+$env:SSL_CERT_FILE = Join-Path (mkcert -CAROOT) "rootCA.pem"
+.venv\Scripts\python examples/session_client.py student
 ```
 
-تست‌ها روی فایل SQLite موقت و مستقل اجرا می‌شوند. CRUD، اعتبارسنجی، ماندگاری، قید SQL، ارتقا و بازگشت migration و تطابق مدل با schema بررسی می‌شوند.
+نمونهٔ `SessionClient` در صورت پایان اعتبار یا حذف کوکی Access، یک بار refresh انجام می‌دهد و درخواست را تکرار می‌کند؛ رمز فقط هنگام ورود لازم است. خطای refresh به فراخواننده برمی‌گردد تا ورود دوباره انجام شود. نمونهٔ ترتیبی است؛ کلاینت چنددرخواستی باید refreshها را هماهنگ کند تا هم‌زمان یک refresh ارسال شود.
 
-این پروژه آموزشی تک‌کاربره است؛ احراز هویت و پرداخت در محدودهٔ تمرین نیستند. مبلغ float مطابق تمرین قبلی حفظ شده است.
+## تست و migration
 
-تحقیق قبلی معماری در شاخهٔ [docs/monolithic-microservices-fa](https://github.com/mdorgoli/architecture-research/tree/docs/monolithic-microservices-fa) و فایل‌های قبلی docs محفوظ است.
+```powershell
+.venv\Scripts\python -m unittest -v
+.venv\Scripts\python -m alembic current
+.venv\Scripts\python -m alembic check
+```
+
+تست‌ها دیتابیس موقت و کلید تصادفی خودشان را می‌سازند و به گواهی محلی احتیاج ندارند. `0002` کاربران، نشست‌ها و مالکیت هزینه را اضافه می‌کند. هزینه‌های قدیمی حفظ می‌شوند ولی چون مالکشان معلوم نیست در API نمایش داده نمی‌شوند. نسبت‌دادن آن‌ها نیاز به بررسی دستی مالک دارد.
+
+`alembic downgrade 0001` اطلاعات کاربران، نشست‌ها و مالکیت را حذف می‌کند و فقط برای آزمایش مناسب است؛ `downgrade base` هزینه‌ها را هم حذف می‌کند. قبل از migration دادهٔ واقعی نسخهٔ پشتیبان بگیرید.
+
+## مستندات
+
+- [طراحی و نکات امنیتی JWT، کوکی، XSS و CSRF](docs/authentication.md)
+- [Schema نسخهٔ جدید](docs/database-design.md)
+- [نمودار drawio احراز هویت و روابط](docs/auth-schema.drawio)
+- نسخهٔ دیتابیس قبلی: شاخهٔ `feat/expense-database`؛ تحقیق معماری: شاخهٔ `docs/monolithic-microservices-fa`.
+
+این تمرین آموزشی است. محدودسازی تلاش ورود، MFA، بازیابی رمز و عملیات حساب کاربری در آن پیاده‌سازی نشده‌اند؛ استفادهٔ عمومی به تکمیل این بخش‌ها و بازبینی استقرار نیاز دارد.
