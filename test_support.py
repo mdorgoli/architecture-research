@@ -73,4 +73,3 @@ class ExpenseFixture(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 201)
         return response.json()
-
