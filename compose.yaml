@@ -1,0 +1,40 @@
+name: expense-manager
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: expenses
+      POSTGRES_USER: expenses
+      POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD:?Set LOCAL_DB_PASSWORD in .env}
+    volumes:
+      - expense_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expenses -d expenses"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  release:
+    build: .
+    command: ["release"]
+    environment: &app_environment
+      APP_ENV: development
+      DJANGO_DEBUG: "0"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: expenses
+      DATABASE_USER: expenses
+      DATABASE_PASSWORD: ${LOCAL_DB_PASSWORD:?Set LOCAL_DB_PASSWORD in .env}
+      DATABASE_SSLMODE: disable
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    build: .
+    environment: *app_environment
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      release:
+        condition: service_completed_successfully
+volumes:
+  expense_data:

@@ -1,5 +1,15 @@
 # پژوهش معماری یکپارچه و میکروسرویس
 
+## تمرین مدیریت هزینه
+
+در شاخهٔ `feat/expense-manager-production`، برنامهٔ مستقل فارسی **حساب‌روز** اضافه شده است:
+
+- [سورس و راهنمای اجرا](expense-manager/README.md)
+- [راهنمای استقرار روی همروش](expense-manager/DEPLOY-HAMRAVESH.md)
+- [فایل متنی تحویل این تمرین](expense-submission.txt)
+
+Dockerfile و Compose در ریشهٔ مخزن قرار دارند. تحقیق معماری زیر به‌صورت مستقل حفظ شده است.
+
 تحقیق فارسی با نثر ویرایش‌شده، ارجاع داخل متن و ۱۷ منبع فنی.
 
 - [فایل Word](docs/monolithic-microservices-fa.docx)

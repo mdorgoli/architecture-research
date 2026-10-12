@@ -1,0 +1,53 @@
+name: Expense manager checks
+on:
+  push:
+    branches: [feat/expense-manager-production]
+  pull_request:
+    paths: ['expense-manager/**', 'Dockerfile', 'compose.yaml', '.github/workflows/expense-manager.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: expenses
+          POSTGRES_USER: expenses
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U expenses -d expenses"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      APP_ENV: test
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_NAME: expenses
+      DATABASE_USER: expenses
+      DATABASE_PASSWORD: ci-only-password
+      DATABASE_SSLMODE: disable
+    defaults:
+      run:
+        working-directory: expense-manager
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: expense-manager/requirements*.txt
+      - run: pip install -r requirements-dev.txt
+      - run: black --check . && flake8 .
+      - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py collectstatic --noinput
+      - run: python manage.py test --noinput
+      - name: Production configuration check
+        run: python manage.py check --deploy --fail-level WARNING
+        env:
+          APP_ENV: production
+          DJANGO_SECRET_KEY: ci-only-check-key-abcdefghijklmnopqrstuvwxyz-0123456789-not-for-deployment
+          DJANGO_ALLOWED_HOSTS: example.org,localhost,127.0.0.1
+          DJANGO_CSRF_TRUSTED_ORIGINS: https://example.org
+      - name: Build runtime image
+        run: docker build -t expense-manager:ci ..

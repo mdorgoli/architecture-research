@@ -1,0 +1,15 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}حساب‌روز · مدیریت هزینه{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'app.css' %}">
+  <script src="{% static 'app.js' %}" defer></script>
+</head>
+<body>
+<header class="site-header"><a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">ح</span> حساب‌روز <small>مدیریت هزینه‌های شخصی</small></a>
+{% if user.is_authenticated %}<nav aria-label="منوی اصلی"><a href="{% url 'dashboard' %}">نمای کلی</a><a href="{% url 'categories' %}">دسته‌بندی‌ها</a><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="quiet" type="submit">خروج · {{ user.username }}</button></form></nav>{% endif %}</header>
+<main>{% for message in messages %}<div role="status" class="notice {{ message.tags }}">{{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer>حساب‌روز <span>ثبت روشن، تصمیم آگاهانه.</span><span>واحد مبالغ: تومان · تاریخ‌ها: میلادی</span></footer>
+</body></html>

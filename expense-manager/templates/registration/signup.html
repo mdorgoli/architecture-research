@@ -1,0 +1,2 @@
+{% extends 'base.html' %}
+{% block content %}<section class="panel narrow"><div class="eyebrow">شروع یک عادت ساده</div><h1>ساخت حساب جدید</h1><p class="muted">یک نام کاربری و رمز عبور با حداقل ۱۲ نویسه انتخاب کنید.</p><form method="post">{% csrf_token %}{{ form.as_p }}<button class="button wide" type="submit">ساخت حساب</button></form><p><a href="{% url 'login' %}">قبلاً ثبت‌نام کرده‌ام</a></p></section>{% endblock %}

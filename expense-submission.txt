@@ -1,0 +1,10 @@
+Repository: https://github.com/mdorgoli/architecture-research
+Exercise branch: feat/expense-manager-production
+Application directory: expense-manager/
+Dockerfile: Dockerfile (repository root)
+Deployment guide: expense-manager/DEPLOY-HAMRAVESH.md
+
+وضعیت: پروژه برای استقرار روی همروش آماده‌سازی شده است؛ هنوز انتشار واقعی انجام نشده است.
+آدرس نهایی HTTPS: هنوز ایجاد نشده است؛ بعد از استقرار و بررسی واقعی تکمیل شود.
+Sentry: اتصال SDK آماده است؛ DSN و تأیید دریافت رخداد روی سرویس واقعی باقی مانده است.
+وضعیت انتشار شاخه در GitHub در گزارش VERIFICATION.md ثبت می‌شود.
