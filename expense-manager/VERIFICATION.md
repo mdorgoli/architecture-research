@@ -14,6 +14,7 @@
 | ساخت Docker و Compose | موفق؛ migration اجرا شد، Gunicorn و PostgreSQL بالا آمدند |
 | UID پردازش داخل کانتینر | `10001`؛ غیر root |
 | healthcheck وب و دیتابیس | هر دو healthy |
+| GitHub Actions روی commit سورس `0cd64b6` | موفق؛ [اجرای تأییدشده](https://github.com/mdorgoli/architecture-research/actions/runs/38191752388) شامل PostgreSQL، lint، بررسی production و ساخت Docker |
 | مرورگر واقعی | ثبت‌نام، ورود خودکار، ثبت هزینه مصنوعی، ویرایش مبلغ و فیلتر دسته تأیید شد |
 | ماندگاری داده | هزینهٔ مصنوعی بعد از بازسازی و جایگزینی کانتینر باقی ماند |
 | چیدمان موبایل، viewport 390×844 | بعد از اصلاح grid، clientWidth و scrollWidth برابر 375؛ بدون سرریز افقی صفحه |
@@ -26,7 +27,6 @@
 - انتشار واقعی روی همروش، DNS و گواهی SSL دامنهٔ عمومی
 - اعتبار هدر HTTPS و IP واقعی پشت ingress انتخابی
 - دریافت رخداد یا alert واقعی در Sentry؛ تست محلی تنها حذف اطلاعات حساس را بررسی کرده است
-- اجرای workflow روی زیرساخت GitHub Actions؛ فایل workflow آماده است
 - آزمون بازیابی بکاپ production، تست بار و اسکن جامع امنیتی
 - تأیید حذف در مرورگر: ابزار مرورگر روی پنجرهٔ native confirm متوقف شد؛ نتیجهٔ حذف و کنترل دسترسی آن در تست‌های Django/PostgreSQL تأیید شده است
 
